@@ -1,0 +1,159 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+    <style>
+    .source-server .list-group .list-group-item {
+        background-color: #fff0f0;
+        color:#a00000;
+    }
+    .source-client .list-group .list-group-item {
+        background-color: #f0f0ff;
+        color:#0000a0;
+    }
+    .action-response {
+        text-align:right;
+    }
+    .action-request {
+        text-align:left;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron">
+                <h1>Socket-IO Demo</h1>
+                <p>A quick and dirty Socket-IO demo. The server emits a new event every ~5 seconds. A client event can be manually emitted by clicking
+                    <button class="btn btn-primary btn-sm" role="button" type="button" onclick="generateClientRequest()">here</button>.</p>
+                <p>For reference
+                    <blockquote><a href="http://socket.io/">http://socket.io/</a>
+                    </blockquote>
+                </p>
+            </div>
+
+        </div>
+        <div class="row log">
+            <div class="well col-md-5">
+                <h2>Server Emissions</h2>
+                <ul class="list-group source-server "></ul>
+            </div>
+            <div class="well col-md-5 col-md-offset-2">
+                <h2>Client Emissions</h2>
+                <ul class="list-group source-client "></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    //
+    // This script block handles all the Socket-IO communication
+    var handleClientResponse = function(data) {
+        console.log({
+            source: 'client',
+            action: 'response',
+            data: data
+        });
+    };
+
+    var handleServerRequest = function(data) {
+        console.log({
+            source: 'server',
+            action: 'request',
+            data: data
+        });
+    };
+
+    var generateClientRequest = function() {
+        var data = {
+            my: 'this is a client request'
+        };
+        console.log({
+            source: 'client',
+            action: 'request',
+            data: data
+        });
+        socket.emit('client request', data);
+    }
+
+    var socket = io.connect('http://localhost'); //, {port:81}
+    socket.on('client response', handleClientResponse);
+    socket.on('server request', handleServerRequest);
+    </script>
+
+
+    <script>
+    //
+    // This script block handles all the visualization. We override the console.log functionality, so technically this whole section can be removed and we still be able to watch the communication in the console
+
+    /**
+     * Returns a string representing the log entry.
+     * @param  {[type]} options An object which looks like: {source: "", action: "", data:""}
+     * @return {[type]}         A string representing the log entry
+     */
+    var getLog = function(options) {
+        options = options || {};
+        options.source = options.source || "?";
+        options.action = options.action || "?";
+        options.data = JSON.stringify(options.data) || "?";
+        options.date = moment().format("YYYY-MM-DD HH:mm:sss");
+
+
+        return Mustache.render('<li class="list-group-item action-{{action}}"><span class="label label-default">{{date}}</span>{{data}}</li>', options)
+    };
+
+    /**
+     * Adds the log entry to the DOM
+     */
+    var addLog = function() {
+        // Check if there are any enough arguments
+        if (arguments.length < 1) {
+            return;
+        }
+
+        // Check if the first arugment is a well formatted "options" parameter
+        var options = arguments[0];
+        if (!options.source && !options.action) {
+            return;
+        }
+
+        // Append log
+        var log = getLog(options);
+        var selector = Mustache.render('.log .source-{{source}}', options);
+        $(selector).children().each(function(index, target) {
+            var FADE_FACTOR = 0.95;
+            var $target = $(target);
+            var currentOpactiy = +$target.css('opacity');
+            var newOpacity = currentOpactiy * FADE_FACTOR * 0.9 + 0.1;
+            $target.css({
+                opacity: newOpacity
+            });
+        });;
+
+        $(selector).prepend(log);
+    };
+
+    var originalConsoleLogFunc = console.log;
+    console.log = function() {
+        // Apply original logging functionality
+        originalConsoleLogFunc.apply(this, arguments);
+
+        // Apply new logging functionality
+        addLog.apply(null, arguments);
+    };
+    </script>
+</body>
+
+</html>
