@@ -1,21 +1,21 @@
 <html>
 
 <head>
+    <title>nodejs-socket-io-demo</title>
+
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
-
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
-
     <style>
-    .source-server .list-group .list-group-item {
+    .source-server ul.list-group li.list-group-item {
         background-color: #fff0f0;
         color:#a00000;
     }
-    .source-client .list-group .list-group-item {
+    .source-client ul.list-group li.list-group-item {
         background-color: #f0f0ff;
         color:#0000a0;
     }
@@ -37,10 +37,14 @@
                 <h1>Socket-IO Demo</h1>
                 <p>A quick and dirty Socket-IO demo. The server emits a new event every ~5 seconds. A client event can be manually emitted by clicking
                     <button class="btn btn-primary btn-sm" role="button" type="button" onclick="generateClientRequest()">here</button>.</p>
-                <p>For reference
-                    <blockquote><a href="http://socket.io/">http://socket.io/</a>
-                    </blockquote>
+                <p>For reference,
                 </p>
+                <ul>
+                    <li>
+                        <a href="http://socket.io/">http://socket.io/</a>
+                    </li>
+
+                </ul>
             </div>
 
         </div>
@@ -93,11 +97,9 @@
     socket.on('server request', handleServerRequest);
     </script>
 
-
     <script>
     //
-    // This script block handles all the visualization. We override the console.log functionality, so technically this whole section can be removed and we still be able to watch the communication in the console
-
+    // (optional) This script block handles all the visualization. We override the console.log functionality, so technically this whole section can be removed and we still be able to watch the communication in the console. This is an optional script block.
     /**
      * Returns a string representing the log entry.
      * @param  {[type]} options An object which looks like: {source: "", action: "", data:""}

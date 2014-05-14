@@ -25,28 +25,30 @@ io.sockets.on('connection', function(socket) {
 
     var timeoutId = -1;
 
-    //
+    /**
+     * Handle "disconnect" events.
+     */
     var handleDisconnect = function() {
         console.log('handle disconnect');
 
         clearTimeout(timeoutId);
     };
 
+    /**
+     * Handle client requests.
+     * @param  {object} data Request arguments
+     */
     var handleClientRequest = function(data) {
         console.log('handle client request');
         console.log(data);
 
-        generateClientResponse();
-    };
-
-    var handleClientRequest = function(data) {
-        console.log('handle client request');
-        console.log(data);
-
+        // Apply a random response time to simulate "work"
         setTimeout(generateClientResponse, 1000 * (0.5 * Math.random() + 0.5));
     };
 
-    //
+    /**
+     * Generate a response to be sent to the client.
+     */
     var generateClientResponse = function() {
         console.log('generate client response');
 
@@ -56,6 +58,9 @@ io.sockets.on('connection', function(socket) {
         });
     };
 
+    /**
+     * Generate a request to be sent to the client.
+     */
     var generateServerRequest = function() {
         console.log('generate server request');
 

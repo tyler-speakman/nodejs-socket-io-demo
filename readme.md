@@ -1,7 +1,15 @@
-<p>Run:</p>
+Socket-IO Demo
+=============
 
-<blockquote>npm start</blockquote>
+A quick and dirty Socket-IO demo. The server emits a new event every ~5 seconds.
 
-<p>Navigate to:</p>
+Installation
+-----------
 
-<blockquote><a href="http://localhost:99/">http://localhost:99/</a></blockquote>
+    npm start
+
+Usage
+-----
+
+    http://localhost:99
+
